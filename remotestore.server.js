@@ -2,7 +2,8 @@
   
 window.addEventListener("message", function msg(e) {
 
-	var prefix="_STORE_", temp;
+	var temp, key="_STORE_" + e.data.key;
+	
 	function send(data, type){
 		e.source.postMessage({res: data, domain: location.href.split("/")[2], type: type, _IS_REMOTE_STORE: 1, serial: e.data.serial }, "*");	
 	}
@@ -10,19 +11,23 @@ window.addEventListener("message", function msg(e) {
 	switch(e.data.cmd) {
 
 	case "set":
-		temp= (localStorage[prefix + e.data.key]||"").length;
-		temp=temp - (localStorage[prefix + e.data.key] = JSON.stringify(e.data.value)).length;
+		temp= (localStorage[key]||"").length - ( 
+			localStorage[key] =  typeof e.data.value==="string" ? 
+				e.data.value : 
+				("ƒ"+JSON.stringify(e.data.value)) 
+		).length ;
 		send(temp, "set");
 		break;
 		
 	case "get":
-		if(!Object.hasOwnProperty.call(localStorage, prefix + e.data.key)) return send("Error, key '"+e.data.key+"' not set", "error");
-		send(JSON.parse(localStorage[prefix + e.data.key]), "get");
+		if(!Object.hasOwnProperty.call(localStorage, key)) return send("Error, key '"+e.data.key+"' not set", "error");
+		temp=localStorage[key];
+		send( temp.slice(0,1)==="ƒ" ? JSON.parse(temp.slice(1)) : temp, "get");
 		break;
 		
 	case "del":
-		temp= (localStorage[prefix + e.data.key]||"").length;
-		delete localStorage[prefix + e.data.key];
+		temp= (localStorage[key]||"").length;
+		delete localStorage[key];
 		send(temp, "del");
 		break;
 			
