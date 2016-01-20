@@ -2,8 +2,7 @@
   
 window.addEventListener("message", function msg(e) {
 
-	var prefix="_STORE_";
-
+	var prefix="_STORE_", temp;
 	function send(data, type){
 		e.source.postMessage({res: data, domain: location.href.split("/")[2], type: type, _IS_REMOTE_STORE: 1, serial: e.data.serial }, "*");	
 	}
@@ -11,8 +10,9 @@ window.addEventListener("message", function msg(e) {
 	switch(e.data.cmd) {
 
 	case "set":
-		localStorage[prefix + e.data.key] = JSON.stringify(e.data.value);
-		send(true, "set");
+		temp= (localStorage[prefix + e.data.key]||"").length;
+		temp=temp - (localStorage[prefix + e.data.key] = JSON.stringify(e.data.value)).length;
+		send(temp, "set");
 		break;
 		
 	case "get":
@@ -21,14 +21,15 @@ window.addEventListener("message", function msg(e) {
 		break;
 		
 	case "del":
+		temp= (localStorage[prefix + e.data.key]||"").length;
 		delete localStorage[prefix + e.data.key];
-		send(true, "del");
+		send(temp, "del");
 		break;
 			
 	case "used":
 		send( Object.keys(localStorage)
 					.map(function(a){return a.length  + localStorage[a].length || 0; })
-					.reduce(function(a,b){return a+b;}), "used"	);
+					.reduce(function(a,b){return a+b;},0), "used"	);
 		break;
 		
 	case "dir":
