@@ -12,7 +12,7 @@ window.addEventListener("message", function msg(e) {
 
 	case "set":
 		temp= (localStorage[key]||"").length - ( 
-			localStorage[key] =  typeof e.data.value==="string" ? 
+			localStorage[key] =  (typeof e.data.value==="string" && e.data.value.slice(0,1)!="ƒ") ? 
 				e.data.value : 
 				("ƒ"+JSON.stringify(e.data.value)) 
 		).length ;
