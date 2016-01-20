@@ -11,7 +11,7 @@ function RemoteStore(URL){
 		frm.onload = null;	// don't fire again in case of a frame hijack
 	};
 	
-	frm.src=URL;
+	setTimeout(function(){	frm.src=URL; }, 10);
 
 	function send(msg){
 		frm.contentWindow.postMessage(msg, "*");
