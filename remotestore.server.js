@@ -28,8 +28,8 @@ window.addEventListener("message", function msg(e) {
 			
 	case "used":
 		send( Object.keys(localStorage)
-					.map(function(a){return a.length  + localStorage[a].length || 0; })
-					.reduce(function(a,b){return a+b;},0), "used"	);
+			.map(function(a){return a.length  + localStorage[a].length || 0; })
+			.reduce(function(a,b){return a+b;},0), "used"	);
 		break;
 		
 	case "dir":
