@@ -1,4 +1,4 @@
-// remotestore.js by dandavis [CCBY4], 2016. allows accessing the same storage from any domain. server code. 
+// remotestore.server.js by dandavis [CCBY4], allows accessing the same storage from any domain. server code. 
   
 window.addEventListener("message", function msg(e) {
 
