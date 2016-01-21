@@ -22,7 +22,7 @@ You then load the `remotestore.js` library into your app, and point it towards t
 Usage:
 
 	var store = RemoteStore(strURLofHtmlServerPage); // one common domain w/ String
-	var store = RemoteStore([strURL1, strURL2, ... );// pool many domains w/ Array
+	var store = RemoteStore([strURL1, strURL2, ...] );// pool many domains w/ Array
 
 Promises:
 
