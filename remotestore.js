@@ -1,6 +1,8 @@
 // remotestore.js by dandavis [CCBY4], 2016. allows accessing the same storage from any domain. client code.
 function RemoteStore(URL){
 
+	if(Array.isArray(URL)) return RemoteStore.pool(URL);
+
 	var frm=document.createElement("iframe"), 
 	 readyState= 0,
 	 used= 0;
