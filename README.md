@@ -37,6 +37,27 @@ Usage:
 	used: n -the # of bytes consumed by the data
 	
 
+### Examples
+
+#### Create a new RemoteStore Instance
+`var myRS = RemoteStore("https://pagedemos.com/store/remotestore.html");`
+#### Save key/value paid and show the available byte adjustment
+`myRS.set("test", "Hello World").then(alert); // shows: -11`
+#### List Saved Keys
+`myRS.dir().then(alert); // shows: test`
+#### Load a Saved Key
+`myRS.get("test").then(alert); // shows: Hello World`
+#### Load a Missing Key and get error info
+`myRS.get("asdf").catch(JSON.stringify).then(alert);` <br />
+`// shows: {"res":"Error, key 'asdf' not set","domain":"https://pagedemos.com","type":"error" ...}`
+#### Remove a Saved Key and get the cost adjustment
+`myRS.del("test").then(alert); // shows: 11`
+
+
+
+
+
+
 
 
 
