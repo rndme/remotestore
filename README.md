@@ -3,7 +3,7 @@
 
 The browser-provided localStorage interface is only available to same-domain pages and is limited to just 5mb of data. 
 
-With RemoteStore, you can access the localStorage of a specified domain from any domain, and you can pool many domains together to save larger amounts of data.
+RemoteStore opens the localStorage of a specified domain from any domain, and can pool many domains together to save more data.
 
 
 ### How it Works
