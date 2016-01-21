@@ -24,14 +24,14 @@ Usage:
 	var store = RemoteStore(strURLofHtmlServerPage); // one common domain w/ String
 	var store = RemoteStore([strURL1, strURL2, ...]);// pool many domains w/ Array
 
-Promises:
+#### Promise Methods:
 
 	get: 	(key) - fetches a saved value from the RemoteStore(s)'s server's localStorage
 	set: 	(key, value) - save a value to the least-used localStorage or update an existing value
 	dir: 	() - fetches an array of stored key names
 	del: 	(key) - delete a key:value pair by key, yields the size difference
 	
-Getters:
+#### Property Getters:
 
 	readyState: [0|1] - have the iframe(s) loaded and checked-in?
 	used: n -the # of bytes consumed by the data
