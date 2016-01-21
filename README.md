@@ -8,6 +8,7 @@ With RemoteStore, you can access the localStorage of a specified domain from any
 
 ### How it Works
 RemoteStore requires two parts to operate: 
+
 1. 1+ HTML "server" page(s) that live in a hidden iframe
 2. a JavaScript client library that provides Promise-based access to the hidden frame's localStorage
 
