@@ -19,6 +19,11 @@ You then load the `remotestore.js` library into your app, and point it towards t
 
 
 ### The Interface
+Usage:
+
+	var store = RemoteStore(strURLofHtmlServerPage); // one common domain w/ String
+	var store = RemoteStore([strURL1, strURL2, ... );// pool many domains w/ Array
+
 Promises:
 
 	get: 	(key) - fetches a saved value from the RemoteStore(s)'s server's localStorage
