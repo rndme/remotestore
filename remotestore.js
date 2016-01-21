@@ -1,4 +1,4 @@
-// remotestore.js by dandavis [CCBY4]. allows accessing the same storage from any domain. client code.
+// remotestore.js by dandavis [CCBY4], 2016. allows accessing the same storage from any domain. client code.
 function RemoteStore(URL){
 
 	var frm=document.createElement("iframe"), 
@@ -10,7 +10,6 @@ function RemoteStore(URL){
 		readyState = 1;	// mark as loaded
 		frm.onload = null;	// don't fire again in case of a frame hijack
 	};
-	
 	setTimeout(function(){	frm.src=URL; }, 10);
 
 	function send(msg){
@@ -49,3 +48,73 @@ function RemoteStore(URL){
 		get used(){ return used;},
 	};   
 }
+
+
+RemoteStore.pool=function Pool(arrURLs){ // allows a cluster of RemoteStores to act as one via the normal interface
+
+	function _call(op, key, value){
+		var slot = 0;
+		if(readyState){
+			if(key in index){
+				slot=index[key];
+			}else{
+				slot=weights.indexOf(Math.min.apply(0, weights)); 	// smallest used
+				index[key]=slot;
+			}
+
+			return r[slot][op](key, value).then(function(value){
+				if(op==="set" || op==="del"){
+					available+=value;
+					weights[slot]-=value;
+				}
+				if(op==="del") delete index[key];
+				return value;
+			});
+		}else{
+			return new Promise(function(resolve, reject) { 
+				(function _waiter(){
+					if(!readyState) return setTimeout(_waiter, 33);
+					_call(op, key, value).then(resolve).catch(reject);
+				}());
+			});
+		}
+	}
+
+
+	var r=arrURLs.map(RemoteStore),
+	index={},
+	used=0,
+	weights= arrURLs.map(Number.bind(0,0)),
+	available=0,
+	readyState=0,
+	api={
+		dir: function(){
+			return readyState ? 
+				Promise.resolve(Object.keys(index))  :
+				Promise.all(r.map(function(a){return a.dir();})).then(function(r){
+					return r.reduce(function(a,b){return a.concat(b);},[]);
+				});
+		},
+
+		set: _call.bind(null, "set"),
+		get: _call.bind(null, "get"),
+		del: _call.bind(null, "del"),
+
+		get readyState(){ return readyState;},
+		get used(){ return used;},
+		get available(){ return available-used;},
+	};
+
+	Promise.all(r.map(function(a){return a.dir();})).then(function(rez){
+		rez.forEach(function(a, b){ 
+			a.forEach(function(key){
+				index[key]=b; 
+			});
+			used+= (weights[b]=r[b].used);
+			available += 5 * 1000 * 1000;
+		});
+		readyState = 1;
+	});
+
+   return api;
+};
